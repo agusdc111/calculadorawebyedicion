@@ -26,7 +26,7 @@ Esta es una aplicación web que permite seleccionar productos y calcular el tota
 
 Para ejecutar este proyecto, necesitas tener instaladas las siguientes dependencias:
 
-- Node.js
+- Node.js (Instalado previamente)
 - Express
 - Body-parser
 
