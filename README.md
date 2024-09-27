@@ -1,6 +1,6 @@
 # Calculadora de Productos
 
-Esta es una aplicación web que permite seleccionar productos y calcular el total en función de la cantidad y el precio de cada uno. Además, incluye una aplicación web secundaria para editar los productos y sus categorías, los cuales están almacenados en un archivo JSON.
+Esta es una aplicación web que permite seleccionar productos y calcular el total en función de la cantidad y el precio de cada uno. Además, forma parte de un sistema más amplio que incluye una aplicación secundaria para editar los productos y sus categorías, almacenados en un archivo JSON.
 
 ## Características
 
@@ -9,7 +9,7 @@ Esta es una aplicación web que permite seleccionar productos y calcular el tota
 
 ## Tecnologías Utilizadas
 
-- **Frontend**: HTML, CSS, JavaScript, React (a través de un CDN), Tailwind CSS (a través de un CDN)
+- **Frontend**: HTML, CSS, JavaScript, React (a través de un CDN)
 - **Backend**: Node.js, Express
 - **Almacenamiento**: Archivo JSON
 
