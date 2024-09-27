@@ -1,140 +1,282 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Shopping Cart</title>
-  <script src="https://unpkg.com/react/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-    #root {
-      width: 100%;
-      height: 100vh;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-  </style>
+    <title>Shopping Cart</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+            background-color: #e0f7fa;
+            overflow-y: auto;
+        }
+        .container {
+            width: 90%;
+            max-width: 400px;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 40px;
+            border-radius: 10px;
+        }
+        h2 {
+            color: #00796b;
+            text-align: center;
+        }
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f1f8e9;
+            border-radius: 5px;
+        }
+        .item .name {
+            flex: 2;
+            color: #004d40;
+        }
+        .item .price {
+            flex: 1;
+            text-align: center;
+            color: #214a23;
+        }
+        .item .controls {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .item button {
+            width: 30px;
+            height: 30px;
+            border: none;
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .item .decrease {
+            background-color: #ab0707;
+        }
+        .item .increase {
+            background-color: #c771c3;
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            position: sticky;
+            bottom: 0;
+            background-color: #fff;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+        }
+        .buttons button {
+            width: 48%;
+            padding: 10px;
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .buttons .clear {
+            background-color: #d32f2f;
+        }
+        .buttons .total {
+            background-color: #388e3c;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            width: 80%;
+            max-width: 500px;
+        }
+        .product-detail {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+            padding: 5px;
+            border-bottom: 1px solid #ccc;
+        }
+        .product-detail-left {
+            flex: 2;
+            text-align: left;
+        }
+        .product-detail-middle {
+            flex: 1;
+            text-align: left;
+        }
+        .product-detail-right {
+            flex: 1;
+            text-align: right;
+        }
+        .total-price {
+            text-align: center;
+            font-size: 1.5em;
+            color: #00796b;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .category-title {
+            background-color: #c8e6c9;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 15px;
+            text-align: center;
+            font-size: 1.2em;
+            color: #2e7d32;
+        }
+        .calculation {
+            text-align: left;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-  <div id="root"></div>
-  <script type="text/babel">
-    const { useState, useEffect } = React;
+    <div class="container">
+        <div id="root"></div>
+    </div>
+    <script src="https://unpkg.com/react/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.js"></script>
+    <script type="text/babel">
+        const { useState, useEffect } = React;
 
-    const Item = ({ name, price, count, setCount }) => {
-      return (
-        <div className="flex justify-between mb-2">
-          <span className="text-left">{name}</span>
-          <div className="flex justify-end">
-            <button 
-              className="bg-red-500 text-white px-2 py-1 hover:bg-red-700" 
-              onClick={() => setCount(name, count > 0 ? count - 1 : 0)}
-            >
-              -
-            </button>
-            <span className="mx-2">{count}</span>
-            <button 
-              className="bg-green-700 text-white px-2 py-1 hover:bg-green-900" 
-              onClick={() => setCount(name, count + 1)}
-            >
-              +
-            </button>
-            <span className="px-2">${price}</span>
-          </div>
-        </div>
-      );
-    };
-
-    const App = () => {
-      const [items, setItems] = useState({});
-      const [showTotal, setShowTotal] = useState(false);
-
-      useEffect(() => {
-        fetch('/products.json')
-          .then(response => response.json())
-          .then(data => {
-            const formattedItems = {};
-            Object.keys(data).forEach(category => {
-              formattedItems[category] = data[category].map(([name, price]) => ({ name, price, count: 0 }));
-            });
-            setItems(formattedItems);
-          })
-          .catch(error => console.error('Error fetching products:', error));
-      }, []);
-
-      const setCount = (name, count) => {
-        setItems(items => {
-          const newItems = { ...items };
-          Object.keys(newItems).forEach(category => {
-            newItems[category] = newItems[category].map(item => item.name === name ? { ...item, count } : item);
-          });
-          return newItems;
-        });
-      };
-
-      const clearCart = () => {
-        setItems(items => {
-          const newItems = {};
-          Object.keys(items).forEach(category => {
-            newItems[category] = items[category].map(item => ({ ...item, count: 0 }));
-          });
-          return newItems;
-        });
-        setShowTotal(false);
-      };
-
-      const total = Object.values(items).flat().reduce((acc, item) => acc + item.price * item.count, 0);
-
-      return (
-        <div className="max-w-md mx-auto p-4 pb-20">
-          {Object.keys(items).map(category => (
-            <div key={category}>
-              <h2 className="text-center text-blue-500 text-xl font-bold mb-4">{category}</h2>
-              {items[category].map((item, index) => (
-                <Item key={index} name={item.name} price={item.price} count={item.count} setCount={setCount} />
-              ))}
-            </div>
-          ))}
-          <div className="fixed bottom-0 left-0 right-0 bg-white p-4 border-t border-gray-200">
-            <div className="flex justify-between">
-              <button className="bg-blue-700 text-white px-4 py-2" onClick={clearCart}>Limpiar carrito</button>
-              <button className="bg-blue-700 text-white px-4 py-2" onClick={() => setShowTotal(true)}>Ver total</button>
-            </div>
-            {showTotal && (
-              <div className="fixed top-0 left-0 right-0 bottom-0 bg-gray-500 bg-opacity- 50 flex justify-center">
-                <div className="bg-white p-4 w-full max-w-md mx-auto mt-20 rounded shadow-md">
-                  <h3 className="text-center text-lg font-bold">Resumen</h3>
-                  {Object.values(items).flat().filter(item => item.count > 0).map((item, index) => (
-                    <div key={index} className="flex justify-between mb-2">
-                      <span>{item.name}</span>
-                      <div className="flex justify-end">
-                        <button className="bg-gray-300 text-gray-800 px-2 py-1" onClick={() => setCount(item.name, item.count - 1)}>-</button>
-                        <span className="px-2">{item.count}</span>
-                        <button className="bg-gray-300 text-gray-800 px-2 py-1" onClick={() => setCount(item.name, item.count + 1)}>+</button>
-                        <span className="px-2">${item.price} x {item.count} = ${item.price * item.count}</span>
-                      </div>
+        const Item = ({ name, price, count, setCount }) => {
+            return (
+                <div className="item">
+                    <div className="name">{name}</div>
+                    <div className="price">${price}</div>
+                    <div className="controls">
+                        <button className="decrease" onClick={() => setCount(name, count > 0 ? count - 1 : 0)}>-</button>
+                        <span className="quantity">{count}</span>
+                        <button className="increase" onClick={() => setCount(name, count + 1)}>+</button>
                     </div>
-                  ))}
-                  <div className="flex justify-between mb-4">
-                    <h4 className="text-lg font-bold text-blue-700 border-b-2 border-blue-700 pb-2">Total:</h4>
-                    <h4 className="text-lg font-bold text-blue-700 border-b-2 border-blue-700 pb-2 bg-yellow-100 shadow-md">${total}</h4>
-                  </div>
-                  <button className="bg-blue-700 text-white px-4 py-2" onClick={() => setShowTotal(false)}>Cerrar</button>
                 </div>
-              </div>
-            )}
-          </div>
-        </div>
-      );
-    };
+            );
+        };
 
-    ReactDOM.render(<App />, document.getElementById('root'));
-  </script>
+        const App = () => {
+            const [items, setItems] = useState({});
+            const [showTotal, setShowTotal] = useState({ show: false, total: '0.00', details: {} });
+
+            useEffect(() => {
+                fetch('/products.json')
+                    .then(response => response.json())
+                    .then(data => {
+                        const formattedItems = {};
+                        Object.keys(data).forEach(category => {
+                            formattedItems[category] = data[category].map(([name, price]) => ({ name, price, count: 0 }));
+                        });
+                        setItems(formattedItems);
+                    })
+                    .catch(error => console.error('Error fetching products:', error));
+            }, []);
+
+            const setCount = (name, count) => {
+                setItems(items => {
+                    const newItems = { ...items };
+                    Object.keys(newItems).forEach(category => {
+                        newItems[category] = newItems[category].map(item => item.name === name ? { ...item, count } : item);
+                    });
+                    return newItems;
+                });
+            };
+
+            const clearCart = () => {
+                setItems(items => {
+                    const newItems = { ...items };
+                    Object.keys(newItems).forEach(category => {
+                        newItems[category] = newItems[category].map(item => ({ ...item, count: 0 }));
+                    });
+                    return newItems;
+                });
+            };
+
+            const calculateTotalDetails = () => {
+                let total = 0;
+                const details = {};
+
+                Object.keys(items).forEach(category => {
+                    details[category] = items[category].filter(item => item.count > 0);
+                    details[category].forEach(item => {
+                        total += item.price * item.count;
+                    });
+                });
+
+                return { total: total.toFixed(2), details };
+            };
+
+            const handleShowTotal = () => {
+                const { total, details } = calculateTotalDetails();
+                setShowTotal({ show: true, total, details });
+            };
+
+            const handleCloseTotal = () => {
+                setShowTotal({ ...showTotal, show: false });
+            };
+
+            return (
+                <div>
+                    {Object.keys(items).map(category => (
+                        <div key={category}>
+                            <h2>{category}</h2>
+                            {items[category].map(item => (
+                                <Item key={item.name} name={item.name} price={item.price} count={item.count} setCount={setCount} />
+                            ))}
+                        </div>
+                    ))}
+                    <div className="buttons">
+                        <button className="clear" onClick={clearCart}>Limpiar carrito</button>
+                        <button className="total" onClick={handleShowTotal}>Ver total</button>
+                    </div>
+                    {showTotal.show && (
+                        <div className="overlay">
+                            <div className="modal">
+                                <h2>Total</h2>
+                                {Object.keys(showTotal.details).map(category => (
+                                    <div key={category}>
+                                        <div className="category-title">{category}</div>
+                                        {showTotal.details[category].map(item => (
+                                            <div className="product-detail" key={item.name}>
+                                                <div className="product-detail-left">{item.name}</div>
+                                                <div className="product-detail-middle">
+                                                    <div className="calculation">{item.count} x ${item.price}</div>
+                                                </div>
+                                                <div className="product-detail-right">= ${(item.count * item.price).toFixed(2)}</div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ))}
+                                <div className="total-price">Total: ${showTotal.total}</div>
+                                <button onClick={handleCloseTotal}>Cerrar</button>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
 </body>
 </html>
