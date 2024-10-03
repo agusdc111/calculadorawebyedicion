@@ -10,7 +10,7 @@ Esta es una aplicación web que permite seleccionar productos y calcular el tota
 ## Tecnologías Utilizadas
 
 - **Frontend**: HTML, CSS, JavaScript, React (a través de un CDN)
-- **Backend**: Node.js, Express
+- **Backend**: Node.js, Express, http-auth
 - **Almacenamiento**: Archivo JSON
 
 ## Estructura del Proyecto
@@ -21,6 +21,7 @@ Esta es una aplicación web que permite seleccionar productos y calcular el tota
 - `server.js`: Servidor Express para servir las aplicaciones y manejar el archivo JSON.
 - `styles.css`: Estilos para el editor de productos.
 - `products.json`: Archivo JSON que almacena los productos y sus categorías.
+- `usuarios.txt`: Lista de usuarios y contraseñas para editar productos
 
 ## Dependencias
 
@@ -29,6 +30,7 @@ Para ejecutar este proyecto, necesitas tener instaladas las siguientes dependenc
 - Node.js (Instalado previamente)
 - Express
 - Body-parser
+- http-auth
 
 ## Instalación
 
@@ -40,7 +42,7 @@ Para ejecutar este proyecto, necesitas tener instaladas las siguientes dependenc
 
 2. Instala las dependencias:
     ```bash
-    npm install express body-parser
+    npm install express body-parser http-auth
     ```
 
 3. Inicia el servidor:
@@ -65,11 +67,12 @@ Para ejecutar este proyecto, necesitas tener instaladas las siguientes dependenc
 ### Editor de Productos
 
 1. Abre `http://localhost:5000/editar` en tu navegador.
-2. Para agregar una nueva categoría, escribe el nombre de la categoría en el campo "Nueva categoría" y haz clic en "Agregar Categoría".
-3. Para eliminar una categoría, haz clic en "Eliminar Categoría" junto a la categoría que deseas eliminar.
-4. Para agregar un producto a una categoría, haz clic en "Agregar Producto" y proporciona el nombre y precio del producto.
-5. Para eliminar un producto, haz clic en "Eliminar" junto al producto que deseas eliminar.
-6. Para guardar cambios en nombres y/o precios, haz clic en "Guardar Cambios".
+2. Ingresa alguno de los usuarios y contraseñas que se encuentran en el archivo `usuarios.txt` (Por default se encuentran los usuarios admin:admin y guest:guest)
+3. Para agregar una nueva categoría, escribe el nombre de la categoría en el campo "Nueva categoría" y haz clic en "Agregar Categoría".
+4. Para eliminar una categoría, haz clic en "Eliminar Categoría" junto a la categoría que deseas eliminar.
+5. Para agregar un producto a una categoría, haz clic en "Agregar Producto" y proporciona el nombre y precio del producto.
+6. Para eliminar un producto, haz clic en "Eliminar" junto al producto que deseas eliminar.
+7. Para guardar cambios en nombres y/o precios, haz clic en "Guardar Cambios".
 
 ## Contribución
 
