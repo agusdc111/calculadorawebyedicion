@@ -1,37 +1,50 @@
 const express = require('express');
 const fs = require('fs');
 const bodyParser = require('body-parser');
+const auth = require('http-auth');
 
 const app = express();
-const PORT = 5000; // Cambié el puerto a 5000 para coincidir con tu configuración inicial
+const PORT = 5000;
 
+// Crear un objeto de autenticación básica
+const basic = auth.basic({
+  realm: 'Editar',
+  file: __dirname + '/usuarios.txt'
+});
+
+// Agregar middleware para parsear el cuerpo de las solicitudes
 app.use(bodyParser.json());
-app.use(express.static('.')); // Servir archivos estáticos
 
-// Leer el archivo JSON
+// Agregar middleware para servir archivos estáticos
+app.use(express.static('.'));
+
+// Ruta para obtener los productos
 app.get('/products', (req, res) => {
-    fs.readFile('products.json', 'utf8', (err, data) => {
-        if (err) return res.status(500).send(err);
-        res.json(JSON.parse(data));
-    });
+  fs.readFile('products.json', 'utf8', (err, data) => {
+    if (err) return res.status(500).send(err);
+    res.json(JSON.parse(data));
+  });
 });
 
-// Actualizar el archivo JSON
+// Ruta para actualizar los productos
 app.post('/products', (req, res) => {
-    fs.writeFile('products.json', JSON.stringify(req.body, null, 2), (err) => {
-        if (err) return res.status(500).send(err);
-        res.sendStatus(200);
-    });
+  fs.writeFile('products.json', JSON.stringify(req.body, null, 2), (err) => {
+    if (err) return res.status(500).send(err);
+    res.sendStatus(200);
+  });
 });
 
+// Ruta para acceder a la página de edición
+app.get('/editar', basic.check((req, res) => {
+  res.sendFile(__dirname + '/editar.html');
+}));
+
+// Ruta para acceder a la página principal
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+  res.sendFile(__dirname + '/index.html');
 });
 
-app.get('/editar', (req, res) => {
-    res.sendFile(__dirname + '/editar.html');
-});
-
+// Iniciar el servidor
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
